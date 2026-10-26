@@ -1,3 +1,4 @@
 # Omnidirectional Sleep Light
 
->[!note] WIP
+>[!NOTE]
+>WIP
