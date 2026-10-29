@@ -5,7 +5,7 @@ void setup() {
 }
 
 void loop() {
-    int count = 0;
+    static int count = 0;
     Serial.print("Hello, World! ");
     Serial.println(count);
     count++;
