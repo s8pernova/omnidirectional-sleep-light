@@ -13,13 +13,25 @@ unsigned long reactionStartedAt = 0;
 unsigned long bestTime = 0;
 
 bool enterWasPressed() {
+    // Serial terminals commonly send Enter as two characters: "\r\n".
+    // They may arrive in separate passes through loop(), so ignore line-ending
+    // characters that arrive within 100 ms of the previous one.
+    static bool hasSeenLineEnding = false;
+    static unsigned long lastLineEndingAt = 0;
     bool pressed = false;
 
     while (Serial.available() > 0) {
         char character = Serial.read();
 
         if (character == '\n' || character == '\r') {
-            pressed = true;
+            unsigned long now = millis();
+
+            if (!hasSeenLineEnding || now - lastLineEndingAt >= 100) {
+                pressed = true;
+                hasSeenLineEnding = true;
+            }
+
+            lastLineEndingAt = now;
         }
     }
 
