@@ -5,17 +5,15 @@ Servo panServo;
 Servo tiltServo;
 
 void setup() {
+    Serial.begin(9600);
     panServo.attach(9);
 }
 
 void loop() {
-    Serial.begin(9600);
+    static int position = 0;
 
-    static int count = 0;
-    count += 15; // Increment count and wrap around at 180
-    
-    int position = count % 180; // Ensure position stays within 0-179
-    
+    position = (position + 15) % 180;
+
     Serial.print("[Servo] ");
     Serial.println(position);
 
