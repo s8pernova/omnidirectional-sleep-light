@@ -56,7 +56,16 @@ DISARMED → ARMED_WAITING → POSITIONING → FADING → ACTIVE
 
 Using `millis()` instead of long `delay()` calls keeps the switch, clock, and fault handling responsive while the lamp is moving or fading.
 
-Serial diagnostics use 9600 baud and should report the current time, alarm time, arm state, servo targets, light level, and faults.
+Serial diagnostics use 9600 baud. The current hardware-integration milestone accepts these commands in the Wokwi terminal or physical serial monitor:
+
+| Command | Action |
+|---|---|
+| `t` | Run a test wake sequence: position both servos, then fade the lamp on. |
+| `x` | Cancel the sequence and turn the lamp off. |
+| `s` | Print the state, switch, angles, brightness, sensor reading, and RTC time. |
+| `h` | Print command help. |
+
+The arm/disarm switch remains authoritative: a test cannot start while disarmed, and disarming interrupts positioning or fading immediately.
 
 ## Development
 
