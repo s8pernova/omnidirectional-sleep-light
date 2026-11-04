@@ -2,21 +2,23 @@
 #include <RTClib.h>
 #include <Servo.h>
 
-namespace Pins {
-constexpr uint8_t PAN_SERVO = 9;
-constexpr uint8_t TILT_SERVO = 10;
-constexpr uint8_t LAMP = 5;
-constexpr uint8_t ARM_SWITCH = 2;
-constexpr uint8_t LIGHT_SENSOR = A0;
-}  // namespace Pins
+namespace Pins
+{
+    constexpr uint8_t PAN_SERVO = 9;
+    constexpr uint8_t TILT_SERVO = 10;
+    constexpr uint8_t LAMP = 5;
+    constexpr uint8_t ARM_SWITCH = 2;
+    constexpr uint8_t LIGHT_SENSOR = A0;
+} // namespace Pins
 
-namespace Motion {
-constexpr uint8_t HOME_PAN = 90;
-constexpr uint8_t HOME_TILT = 90;
-constexpr uint8_t WAKE_PAN = 45;
-constexpr uint8_t WAKE_TILT = 60;
-constexpr unsigned long STEP_INTERVAL_MS = 20;
-}  // namespace Motion
+namespace Motion
+{
+    constexpr uint8_t HOME_PAN = 90;
+    constexpr uint8_t HOME_TILT = 90;
+    constexpr uint8_t WAKE_PAN = 45;
+    constexpr uint8_t WAKE_TILT = 60;
+    constexpr unsigned long STEP_INTERVAL_MS = 20;
+} // namespace Motion
 
 constexpr unsigned long FADE_DURATION_MS = 5000;
 
@@ -24,7 +26,8 @@ Servo panServo;
 Servo tiltServo;
 RTC_DS1307 rtc;
 
-enum class State : uint8_t {
+enum class State : uint8_t
+{
     DISARMED,
     READY,
     POSITIONING,
@@ -40,27 +43,31 @@ uint8_t lampBrightness = 0;
 unsigned long lastMotionStepAt = 0;
 unsigned long fadeStartedAt = 0;
 
-const __FlashStringHelper *stateName(State value) {
-    switch (value) {
-        case State::DISARMED:
-            return F("DISARMED");
-        case State::READY:
-            return F("READY");
-        case State::POSITIONING:
-            return F("POSITIONING");
-        case State::FADING:
-            return F("FADING");
-        case State::ACTIVE:
-            return F("ACTIVE");
-        case State::FAULT:
-            return F("FAULT");
+const __FlashStringHelper *stateName(State value)
+{
+    switch (value)
+    {
+    case State::DISARMED:
+        return F("DISARMED");
+    case State::READY:
+        return F("READY");
+    case State::POSITIONING:
+        return F("POSITIONING");
+    case State::FADING:
+        return F("FADING");
+    case State::ACTIVE:
+        return F("ACTIVE");
+    case State::FAULT:
+        return F("FAULT");
     }
 
     return F("UNKNOWN");
 }
 
-void setState(State next) {
-    if (state == next) {
+void setState(State next)
+{
+    if (state == next)
+    {
         return;
     }
 
@@ -69,34 +76,41 @@ void setState(State next) {
     Serial.println(stateName(state));
 }
 
-bool isArmed() {
+bool isArmed()
+{
     // INPUT_PULLUP makes the grounded switch position read LOW.
     return digitalRead(Pins::ARM_SWITCH) == LOW;
 }
 
-void setLamp(uint8_t brightness) {
+void setLamp(uint8_t brightness)
+{
     lampBrightness = brightness;
     analogWrite(Pins::LAMP, lampBrightness);
 }
 
-void stopWakeSequence() {
+void stopWakeSequence()
+{
     setLamp(0);
 
     // A hardware fault is latched until the board is reset and startup passes.
-    if (state == State::FAULT) {
+    if (state == State::FAULT)
+    {
         return;
     }
 
     setState(isArmed() ? State::READY : State::DISARMED);
 }
 
-void startWakeSequence() {
-    if (!isArmed()) {
+void startWakeSequence()
+{
+    if (!isArmed())
+    {
         Serial.println(F("[Wake] Ignored: switch is disarmed."));
         return;
     }
 
-    if (state == State::FAULT) {
+    if (state == State::FAULT)
+    {
         Serial.println(F("[Wake] Ignored: system is in FAULT."));
         return;
     }
@@ -106,19 +120,24 @@ void startWakeSequence() {
     setState(State::POSITIONING);
 }
 
-uint8_t moveOneDegreeToward(uint8_t current, uint8_t target) {
-    if (current < target) {
+uint8_t moveOneDegreeToward(uint8_t current, uint8_t target)
+{
+    if (current < target)
+    {
         return current + 1;
     }
-    if (current > target) {
+    if (current > target)
+    {
         return current - 1;
     }
     return current;
 }
 
-void updatePositioning() {
+void updatePositioning()
+{
     const unsigned long now = millis();
-    if (now - lastMotionStepAt < Motion::STEP_INTERVAL_MS) {
+    if (now - lastMotionStepAt < Motion::STEP_INTERVAL_MS)
+    {
         return;
     }
     lastMotionStepAt = now;
@@ -128,15 +147,18 @@ void updatePositioning() {
     panServo.write(currentPan);
     tiltServo.write(currentTilt);
 
-    if (currentPan == Motion::WAKE_PAN && currentTilt == Motion::WAKE_TILT) {
+    if (currentPan == Motion::WAKE_PAN && currentTilt == Motion::WAKE_TILT)
+    {
         fadeStartedAt = now;
         setState(State::FADING);
     }
 }
 
-void updateFade() {
+void updateFade()
+{
     const unsigned long elapsed = millis() - fadeStartedAt;
-    if (elapsed >= FADE_DURATION_MS) {
+    if (elapsed >= FADE_DURATION_MS)
+    {
         setLamp(255);
         setState(State::ACTIVE);
         return;
@@ -145,14 +167,17 @@ void updateFade() {
     setLamp(static_cast<uint8_t>((elapsed * 255UL) / FADE_DURATION_MS));
 }
 
-void printTwoDigits(uint8_t value) {
-    if (value < 10) {
+void printTwoDigits(uint8_t value)
+{
+    if (value < 10)
+    {
         Serial.print('0');
     }
     Serial.print(value);
 }
 
-void printStatus() {
+void printStatus()
+{
     Serial.print(F("[Status] state="));
     Serial.print(stateName(state));
     Serial.print(F(" switch="));
@@ -166,7 +191,8 @@ void printStatus() {
     Serial.print(F(" lightSensor="));
     Serial.print(analogRead(Pins::LIGHT_SENSOR));
 
-    if (state != State::FAULT) {
+    if (state != State::FAULT)
+    {
         const DateTime now = rtc.now();
         Serial.print(F(" time="));
         printTwoDigits(now.hour());
@@ -179,7 +205,8 @@ void printStatus() {
     Serial.println();
 }
 
-void printHelp() {
+void printHelp()
+{
     Serial.println(F("Commands:"));
     Serial.println(F("  t  run a test wake sequence"));
     Serial.println(F("  x  cancel the sequence and turn off the lamp"));
@@ -187,40 +214,44 @@ void printHelp() {
     Serial.println(F("  h  print this help"));
 }
 
-void handleSerial() {
-    while (Serial.available() > 0) {
+void handleSerial()
+{
+    while (Serial.available() > 0)
+    {
         const char command = static_cast<char>(Serial.read());
 
-        switch (command) {
-            case 't':
-            case 'T':
-                startWakeSequence();
-                break;
-            case 'x':
-            case 'X':
-                stopWakeSequence();
-                break;
-            case 's':
-            case 'S':
-                printStatus();
-                break;
-            case 'h':
-            case 'H':
-                printHelp();
-                break;
-            case '\r':
-            case '\n':
-            case ' ':
-                break;
-            default:
-                Serial.print(F("[Serial] Unknown command: "));
-                Serial.println(command);
-                break;
+        switch (command)
+        {
+        case 't':
+        case 'T':
+            startWakeSequence();
+            break;
+        case 'x':
+        case 'X':
+            stopWakeSequence();
+            break;
+        case 's':
+        case 'S':
+            printStatus();
+            break;
+        case 'h':
+        case 'H':
+            printHelp();
+            break;
+        case '\r':
+        case '\n':
+        case ' ':
+            break;
+        default:
+            Serial.print(F("[Serial] Unknown command: "));
+            Serial.println(command);
+            break;
         }
     }
 }
 
-void setup() {
+void setup()
+{
     Serial.begin(9600);
 
     pinMode(Pins::ARM_SWITCH, INPUT_PULLUP);
@@ -229,13 +260,18 @@ void setup() {
 
     Serial.println(F("\nOmnidirectional Sleep Light"));
 
-    if (!rtc.begin()) {
+    if (!rtc.begin())
+    {
         Serial.println(F("[Fault] DS1307 was not detected."));
         setState(State::FAULT);
-    } else if (!rtc.isrunning()) {
+    }
+    else if (!rtc.isrunning())
+    {
         Serial.println(F("[Fault] DS1307 clock is not running."));
         setState(State::FAULT);
-    } else {
+    }
+    else
+    {
         // Do not energize either motor until all required startup checks pass.
         panServo.attach(Pins::PAN_SERVO);
         tiltServo.attach(Pins::TILT_SERVO);
@@ -249,20 +285,28 @@ void setup() {
     printStatus();
 }
 
-void loop() {
+void loop()
+{
     handleSerial();
 
-    if (state != State::FAULT) {
-        if (!isArmed() && state != State::DISARMED) {
+    if (state != State::FAULT)
+    {
+        if (!isArmed() && state != State::DISARMED)
+        {
             stopWakeSequence();
-        } else if (isArmed() && state == State::DISARMED) {
+        }
+        else if (isArmed() && state == State::DISARMED)
+        {
             setState(State::READY);
         }
     }
 
-    if (state == State::POSITIONING) {
+    if (state == State::POSITIONING)
+    {
         updatePositioning();
-    } else if (state == State::FADING) {
+    }
+    else if (state == State::FADING)
+    {
         updateFade();
     }
 }
