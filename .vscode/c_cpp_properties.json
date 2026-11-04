@@ -10,14 +10,16 @@
             "includePath": [
                 "/home/achru/git-projects/omnidirectional-sleep-light/include",
                 "/home/achru/git-projects/omnidirectional-sleep-light/src",
+                "/home/achru/git-projects/omnidirectional-sleep-light/.pio/libdeps/uno/RTClib/src",
+                "/home/achru/git-projects/omnidirectional-sleep-light/.pio/libdeps/uno/Adafruit BusIO",
+                "/home/achru/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "/home/achru/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 "/home/achru/git-projects/omnidirectional-sleep-light/.pio/libdeps/uno/Servo/src",
                 "/home/achru/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "/home/achru/.platformio/packages/framework-arduino-avr/variants/standard",
                 "/home/achru/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                 "/home/achru/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                "/home/achru/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                 "/home/achru/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                "/home/achru/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 ""
             ],
             "browse": {
@@ -25,14 +27,16 @@
                 "path": [
                     "/home/achru/git-projects/omnidirectional-sleep-light/include",
                     "/home/achru/git-projects/omnidirectional-sleep-light/src",
+                    "/home/achru/git-projects/omnidirectional-sleep-light/.pio/libdeps/uno/RTClib/src",
+                    "/home/achru/git-projects/omnidirectional-sleep-light/.pio/libdeps/uno/Adafruit BusIO",
+                    "/home/achru/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "/home/achru/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     "/home/achru/git-projects/omnidirectional-sleep-light/.pio/libdeps/uno/Servo/src",
                     "/home/achru/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "/home/achru/.platformio/packages/framework-arduino-avr/variants/standard",
                     "/home/achru/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                     "/home/achru/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                    "/home/achru/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                     "/home/achru/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                    "/home/achru/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     ""
                 ]
             },
