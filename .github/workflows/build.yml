@@ -3,6 +3,7 @@ name: Firmware build
 on:
     push:
     pull_request:
+        branches: ["main"]
 
 permissions:
     contents: read
