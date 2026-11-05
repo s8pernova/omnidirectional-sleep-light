@@ -1,1 +1,9 @@
-.pio
+# Generated build output and machine-specific editor configuration.
+.pio/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+compile_commands.json
+.cache/
+.venv/
+__pycache__/
