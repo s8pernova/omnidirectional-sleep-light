@@ -1,0 +1,4 @@
+BasedOnStyle: Microsoft
+BreakBeforeBraces: Allman
+NamespaceIndentation: All
+ColumnLimit: 0

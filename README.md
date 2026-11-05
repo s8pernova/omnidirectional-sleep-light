@@ -90,9 +90,25 @@ These commands work in Linux, macOS, and Windows PowerShell without activating a
 
 Commit source code, `platformio.ini`, `pyproject.toml`, `uv.lock`, `.python-version`, and portable editor recommendations. The AVR platform and Arduino libraries are pinned in `platformio.ini`. PlatformIO is declared as a development dependency in `pyproject.toml`, and `uv.lock` records its resolved Python dependencies. The `--locked` flag rejects a stale lockfile instead of silently updating it. When intentionally updating tools, edit the dependency declaration, run `uv lock`, verify the build, and commit both files together.
 
-PlatformIO generates `.pio/`, `.vscode/c_cpp_properties.json`, and `.vscode/launch.json` on each developer's machine. These files contain local paths and are ignored by Git, along with local editor settings and `compile_commands.json`. Let PlatformIO regenerate them locally. Each collaborator downloads their own dependencies; nobody needs another developer's home directory. Keep USB port selections local or pass them with `pio run --target upload --upload-port <port>`.
+PlatformIO generates `.pio/`, `.vscode/c_cpp_properties.json`, and `.vscode/launch.json` on each developer's machine. These files contain local paths and are ignored by Git, along with `compile_commands.json`. Let PlatformIO regenerate them locally. Only portable extension recommendations and formatting settings are shared under `.vscode/`; keep personal preferences in VS Code user settings. Each collaborator downloads their own dependencies; nobody needs another developer's home directory. Keep USB port selections local or pass them with `pio run --target upload --upload-port <port>`.
 
 GitHub Actions builds the Uno firmware on every push and pull request using the pinned CLI. This checks compilation on a separate machine; physical behavior still needs hardware or simulator verification.
+
+### Formatting
+
+The repository's `.clang-format` preserves the current C++ style: Allman braces, four spaces per indentation level, indented namespace contents, and the existing include order. Pressing Tab inserts spaces. `.editorconfig` declares the same indentation for compatible editors and preserves literal tabs for Make recipes.
+
+The shared `.vscode/settings.json` selects Microsoft's C/C++ formatter, enables format-on-save for C/C++, and disables indentation guessing in this repository. The extension reads `.clang-format` as [documented by VS Code](https://code.visualstudio.com/docs/cpp/cpp-ide#_code-formatting). Open the repository root folder and install the recommended C/C++ extension for these settings to apply.
+
+For the exact formatter version used by CI, run:
+
+```bash
+uv sync --locked
+make format                # apply formatting
+make format-check          # check without editing
+```
+
+The CLI and CI use clang-format 21.1.8 from `uv.lock`; VS Code uses the version bundled with its C/C++ extension with the same style file. CI rejects formatting differences. Without Make, run `uv run --locked clang-format -i src/main.cpp` to format the current firmware directly, or replace `-i` with `--dry-run --Werror` to check it.
 
 ### Build and upload
 

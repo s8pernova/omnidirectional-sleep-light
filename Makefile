@@ -3,7 +3,7 @@ BAUD ?= 9600
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build upload monitor deploy
+.PHONY: help build upload monitor deploy format format-check
 
 help:
 	@echo "Arduino Uno commands:"
