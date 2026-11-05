@@ -58,18 +58,45 @@ Using `millis()` instead of long `delay()` calls keeps the switch, clock, and fa
 
 Serial diagnostics use 9600 baud. The current hardware-integration milestone accepts these commands in the Wokwi terminal or physical serial monitor:
 
-| Command | Action |
-|---|---|
-| `t` | Run a test wake sequence: position both servos, then fade the lamp on. |
-| `x` | Cancel the sequence and turn the lamp off. |
-| `s` | Print the state, switch, angles, brightness, sensor reading, and RTC time. |
-| `h` | Print command help. |
+| Command | Action                                                                     |
+| ------- | -------------------------------------------------------------------------- |
+| `t`     | Run a test wake sequence: position both servos, then fade the lamp on.     |
+| `x`     | Cancel the sequence and turn the lamp off.                                 |
+| `s`     | Print the state, switch, angles, brightness, sensor reading, and RTC time. |
+| `h`     | Print command help.                                                        |
 
 The arm/disarm switch remains authoritative: a test cannot start while disarmed, and disarming interrupts positioning or fading immediately.
 
 ## Development
 
 This is a PlatformIO Arduino project. Run commands from the repository root, where `platformio.ini` is located.
+
+### First-time setup
+
+Clone this repository and open its root folder in VS Code. Install the recommended **PlatformIO IDE** extension and let it finish initializing. It includes PlatformIO Core and downloads the Uno toolchain, Arduino framework, and declared libraries on the first build. Run **PlatformIO: Build** from the command palette. A connected Arduino is only needed for uploading, not compiling.
+
+Use PlatformIO with Microsoft's **C/C++** extension for code completion and diagnostics. Disable **clangd** for this workspace if installed; it needs a separate compilation database and does not read PlatformIO's generated C/C++ editor configuration. After the first build, run **PlatformIO: Rebuild IntelliSense Index** if headers are still underlined. When working in WSL, install the extensions in WSL and open the repository through VS Code's WSL connection.
+
+For the reproducible command-line workflow used in CI, install [uv](https://docs.astral.sh/uv/getting-started/installation/) (CI uses uv 0.10.12), then run:
+
+```bash
+uv sync --locked
+uv run --locked pio run -e uno
+```
+
+These commands work in Linux, macOS, and Windows PowerShell without activating a virtual environment. uv downloads Python 3.12 if needed and installs the locked development tools into the ignored `.venv/` directory. Python runs PlatformIO; the firmware remains C++. The PlatformIO VS Code extension manages its own Core installation, so use the uv commands when checking against CI's exact Python dependency versions.
+
+### Shared configuration
+
+Commit source code, `platformio.ini`, `pyproject.toml`, `uv.lock`, `.python-version`, and portable editor recommendations. The AVR platform and Arduino libraries are pinned in `platformio.ini`. PlatformIO is declared as a development dependency in `pyproject.toml`, and `uv.lock` records its resolved Python dependencies. The `--locked` flag rejects a stale lockfile instead of silently updating it. When intentionally updating tools, edit the dependency declaration, run `uv lock`, verify the build, and commit both files together.
+
+PlatformIO generates `.pio/`, `.vscode/c_cpp_properties.json`, and `.vscode/launch.json` on each developer's machine. These files contain local paths and are ignored by Git, along with local editor settings and `compile_commands.json`. Let PlatformIO regenerate them locally. Each collaborator downloads their own dependencies; nobody needs another developer's home directory. Keep USB port selections local or pass them with `pio run --target upload --upload-port <port>`.
+
+GitHub Actions builds the Uno firmware on every push and pull request using the pinned CLI. This checks compilation on a separate machine; physical behavior still needs hardware or simulator verification.
+
+### Build and upload
+
+With uv installed, the optional Make shortcuts use `uv run --locked pio`:
 
 ```bash
 make build                 # compile only
@@ -82,9 +109,9 @@ make deploy BAUD=115200    # override monitor baud
 Equivalent PlatformIO commands are:
 
 ```bash
-pio run
-pio run --target upload
-pio device monitor --baud 9600
+uv run --locked pio run
+uv run --locked pio run --target upload
+uv run --locked pio device monitor --baud 9600
 ```
 
 If the Uno is attached to Windows while PlatformIO runs in WSL, attach its USB device to WSL before uploading.
@@ -94,7 +121,7 @@ If the Uno is attached to Windows while PlatformIO runs in WSL, attach its USB d
 The repository contains `wokwi.toml` and `diagram.json`. Build the firmware first, then start the Wokwi simulator from VS Code.
 
 ```bash
-pio run
+uv run --locked pio run
 ```
 
 The completed virtual circuit is expected to include:

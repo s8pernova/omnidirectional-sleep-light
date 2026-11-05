@@ -1,4 +1,4 @@
-PIO ?= pio
+PIO ?= uv run --locked pio
 BAUD ?= 9600
 
 .DEFAULT_GOAL := help
