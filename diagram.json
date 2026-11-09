@@ -4,8 +4,8 @@
 	"editor": "wokwi",
 	"parts": [
 		{
-			"type": "wokwi-arduino-uno",
-			"id": "uno",
+			"type": "board-esp32-devkit-c-v4",
+			"id": "esp",
 			"top": 0,
 			"left": 0,
 			"attrs": {}
@@ -62,29 +62,29 @@
 		}
 	],
 	"connections": [
-		["uno:9", "panServo:PWM", "green", []],
-		["uno:5V", "panServo:V+", "red", []],
-		["uno:GND.2", "panServo:GND", "black", []],
+		["esp:18", "panServo:PWM", "green", []],
+		["esp:5V", "panServo:V+", "red", []],
+		["esp:GND.1", "panServo:GND", "black", []],
 
-		["uno:10", "tiltServo:PWM", "green", []],
-		["uno:5V", "tiltServo:V+", "red", []],
-		["uno:GND.2", "tiltServo:GND", "black", []],
+		["esp:19", "tiltServo:PWM", "green", []],
+		["esp:5V", "tiltServo:V+", "red", []],
+		["esp:GND.1", "tiltServo:GND", "black", []],
 
-		["uno:A4", "rtc:SDA", "blue", []],
-		["uno:A5", "rtc:SCL", "yellow", []],
-		["uno:5V", "rtc:5V", "red", []],
-		["uno:GND.2", "rtc:GND", "black", []],
+		["esp:21", "rtc:SDA", "blue", []],
+		["esp:22", "rtc:SCL", "yellow", []],
+		["esp:5V", "rtc:5V", "red", []],
+		["esp:GND.1", "rtc:GND", "black", []],
 
-		["uno:A0", "lightSensor:AO", "purple", []],
-		["uno:5V", "lightSensor:VCC", "red", []],
-		["uno:GND.2", "lightSensor:GND", "black", []],
+		["esp:34", "lightSensor:AO", "purple", []],
+		["esp:3V3", "lightSensor:VCC", "red", []],
+		["esp:GND.1", "lightSensor:GND", "black", []],
 
-		["uno:2", "armSwitch:2", "blue", []],
-		["uno:GND.2", "armSwitch:1", "black", []],
+		["esp:32", "armSwitch:2", "blue", []],
+		["esp:GND.1", "armSwitch:1", "black", []],
 
-		["uno:5", "lampResistor:1", "orange", []],
+		["esp:27", "lampResistor:1", "orange", []],
 		["lampResistor:2", "lampLed:A", "orange", []],
-		["lampLed:C", "uno:GND.2", "black", []]
+		["lampLed:C", "esp:GND.1", "black", []]
 	],
 	"dependencies": {}
 }
