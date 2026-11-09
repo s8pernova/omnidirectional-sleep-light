@@ -1,16 +1,90 @@
 {
-  "version": 1,
-  "author": "achru",
-  "editor": "wokwi",
-  "parts": [
-    {
-      "type": "wokwi-arduino-uno",
-      "id": "uno",
-      "top": 0,
-      "left": 0,
-      "attrs": {}
-    }
-  ],
-  "connections": [],
-  "dependencies": {}
+	"version": 1,
+	"author": "Aidan Hoo",
+	"editor": "wokwi",
+	"parts": [
+		{
+			"type": "wokwi-arduino-uno",
+			"id": "uno",
+			"top": 0,
+			"left": 0,
+			"attrs": {}
+		},
+		{
+			"type": "wokwi-servo",
+			"id": "panServo",
+			"top": 20,
+			"left": 450,
+			"attrs": { "horn": "double", "hornColor": "#ff8fab" }
+		},
+		{
+			"type": "wokwi-servo",
+			"id": "tiltServo",
+			"top": 180,
+			"left": 450,
+			"attrs": { "horn": "double", "hornColor": "#bde0fe" }
+		},
+		{
+			"type": "wokwi-ds1307",
+			"id": "rtc",
+			"top": 430,
+			"left": -190,
+			"attrs": { "initTime": "now" }
+		},
+		{
+			"type": "wokwi-photoresistor-sensor",
+			"id": "lightSensor",
+			"top": 430,
+			"left": 30,
+			"attrs": { "lux": "10" }
+		},
+		{
+			"type": "wokwi-slide-switch",
+			"id": "armSwitch",
+			"top": 450,
+			"left": 300,
+			"attrs": {}
+		},
+		{
+			"type": "wokwi-resistor",
+			"id": "lampResistor",
+			"top": 450,
+			"left": 470,
+			"rotate": 90,
+			"attrs": { "value": "220" }
+		},
+		{
+			"type": "wokwi-led",
+			"id": "lampLed",
+			"top": 430,
+			"left": 590,
+			"attrs": { "color": "white", "label": "Lamp (simulated)" }
+		}
+	],
+	"connections": [
+		["uno:9", "panServo:PWM", "green", []],
+		["uno:5V", "panServo:V+", "red", []],
+		["uno:GND.2", "panServo:GND", "black", []],
+
+		["uno:10", "tiltServo:PWM", "green", []],
+		["uno:5V", "tiltServo:V+", "red", []],
+		["uno:GND.2", "tiltServo:GND", "black", []],
+
+		["uno:A4", "rtc:SDA", "blue", []],
+		["uno:A5", "rtc:SCL", "yellow", []],
+		["uno:5V", "rtc:5V", "red", []],
+		["uno:GND.2", "rtc:GND", "black", []],
+
+		["uno:A0", "lightSensor:AO", "purple", []],
+		["uno:5V", "lightSensor:VCC", "red", []],
+		["uno:GND.2", "lightSensor:GND", "black", []],
+
+		["uno:2", "armSwitch:2", "blue", []],
+		["uno:GND.2", "armSwitch:1", "black", []],
+
+		["uno:5", "lampResistor:1", "orange", []],
+		["lampResistor:2", "lampLed:A", "orange", []],
+		["lampLed:C", "uno:GND.2", "black", []]
+	],
+	"dependencies": {}
 }
