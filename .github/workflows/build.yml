@@ -17,4 +17,4 @@ jobs:
               with:
                   version: "0.10.12"
             - run: uv sync --locked
-            - run: uv run --locked pio run -e uno
+            - run: uv run --locked pio run -e esp32dev
