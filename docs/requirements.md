@@ -19,7 +19,7 @@
 | -------------------------------------------------------------------------------------------------------------------------------- |
 | The device shall maintain wall-clock time with a battery-backed RTC.                                                             |
 | The user shall be able to set an alarm without recompiling the firmware.                                                         |
-| The alarm time and calibrated lamp direction shall survive an Uno reset.                                                         |
+| The alarm time and calibrated lamp direction shall survive an ESP32 reset.                                                       |
 | At the alarm time, the device shall move the lamp to its stored pan and tilt angles.                                             |
 | The device shall gradually increase lamp brightness over a configurable interval.                                                |
 | A physical switch shall arm and disarm the alarm. Disarming shall turn off the lamp and stop automatic motion within one second. |
@@ -31,12 +31,14 @@
 
 | Requirement                                                                                                                            |
 | -------------------------------------------------------------------------------------------------------------------------------------- |
-| The controller shall be compatible with the Arduino Uno R3 target configured in PlatformIO.                                            |
+| The controller shall be compatible with the ESP32 Dev Module target configured in PlatformIO.                                          |
 | Two positional servos shall provide independent pan and tilt control. Continuous-rotation servos shall not be used.                    |
 | The selected tilt servo shall have rated stall torque at least three times the maximum static load moment of the moving lamp assembly. |
 | The servos shall use a regulated external supply sized for both motors' simultaneous peak current.                                     |
 | The lamp shall use an external supply and a logic-level switching device rated for the lamp's voltage and current.                     |
-| The Uno, servos, sensors, RTC, and lamp-control circuit shall share a common low-voltage ground.                                       |
+| The ESP32, servos, sensors, RTC, and lamp-control circuit shall share a common low-voltage ground.                                     |
+| Every signal connected to an ESP32 GPIO shall remain within 3.3 V logic limits.                                                        |
+| A 5 V DS1307 module shall use a verified 3.3 V-safe I2C interface or a bidirectional level shifter.                                    |
 | The support, joints, and wiring shall tolerate full permitted motion without slipping, collision, pinching, or wire strain.            |
 | The device shall use an enclosed, listed low-voltage wall adapter and contain no exposed mains wiring.                                 |
 | The completed device shall comply with applicable Virginia Tech housing and fire-safety rules before unattended dorm use.              |
@@ -49,7 +51,7 @@ The prototype is ready for integrated testing when all of the following pass:
 - The RTC retains valid time after main power is removed and restored.
 - An alarm triggers once at the configured time.
 - Both axes move through their calibrated ranges without collision, binding, resets, or wire strain.
-- Simultaneous servo motion and maximum lamp output do not reset the Uno or move a supply outside its rated range.
+- Simultaneous servo motion and maximum lamp output do not reset the ESP32 or move a supply outside its rated range.
 - Lamp brightness increases monotonically through 0%, 25%, 50%, 75%, and 100% commands.
 - The disarm switch safely interrupts every active state.
 - One hundred pan/tilt/return cycles cause no loose fasteners, damage, or loss of calibration.
@@ -63,6 +65,7 @@ The prototype is ready for integrated testing when all of the following pass:
 2. Completed lamp-and-linkage mass, center of mass, and required tilt torque.
 3. Exact 3 W lamp model, input voltage/current, polarity, and dimming compatibility.
 4. Final power adapter, servo regulator, protection, connectors, and logic-level lamp switch.
-5. Final alarm-setting interface for users who will not have a development computer.
-6. Whether webcam tracking is in scope and, if so, which host computer will process it.
-7. Final pan/tilt limits and the required target-to-roommate light-level ratio.
+5. Exact RTC breakout design, including its I2C pull-up voltage and any required level shifter.
+6. Final alarm-setting interface for users who will not have a development computer.
+7. Whether webcam tracking is in scope and, if so, which host computer will process it.
+8. Final pan/tilt limits and the required target-to-roommate light-level ratio.

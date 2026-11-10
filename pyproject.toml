@@ -1,7 +1,7 @@
 [project]
 name = "omnidirectional-sleep-light"
 version = "0.1.0"
-description = "Python tooling for the Arduino Uno sleep-light firmware"
+description = "Python tooling for the ESP32 sleep-light firmware"
 requires-python = ">=3.12,<3.13"
 dependencies = []
 

@@ -5,8 +5,6 @@
 
 A quiet, directional wake light for people who share a room. At a scheduled time, the device aims a light toward one bed and gradually increases its brightness, helping wake the intended user without playing an audible alarm.
 
-The design combines a bed-mounted arm, a conical lamp enclosure, and a two-axis servo mount.
-
 ## How it works
 
 1. A DS1307 real time clock (RTC) keeps track of the time.

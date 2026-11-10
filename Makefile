@@ -6,7 +6,7 @@ BAUD ?= 9600
 .PHONY: help build upload monitor deploy format format-check
 
 help:
-	@echo "Arduino Uno commands:"
+	@echo "ESP32 commands:"
 	@echo "  make build                 Compile without uploading"
 	@echo "  make upload                Compile and upload"
 	@echo "  make monitor               Open serial monitor at 9600 baud"
