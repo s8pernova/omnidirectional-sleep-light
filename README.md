@@ -1,7 +1,7 @@
 # Omnidirectional Sleep Light
 
 > [!NOTE]
-> This project is in (very) early development.
+> This project is in early development.
 
 A quiet, directional wake light for people who share a room. At a scheduled time, the device aims a light toward one bed and gradually increases its brightness, helping wake the intended user without playing an audible alarm.
 
