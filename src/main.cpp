@@ -1,14 +1,14 @@
 #include <Arduino.h>
+#include <ESP32Servo.h>
 #include <RTClib.h>
-#include <Servo.h>
 
 namespace Pins
 {
-    constexpr uint8_t PAN_SERVO = 9;
-    constexpr uint8_t TILT_SERVO = 10;
-    constexpr uint8_t LAMP = 5;
-    constexpr uint8_t ARM_SWITCH = 2;
-    constexpr uint8_t LIGHT_SENSOR = A0;
+    constexpr uint8_t PAN_SERVO = 18;
+    constexpr uint8_t TILT_SERVO = 19;
+    constexpr uint8_t LAMP = 27;
+    constexpr uint8_t ARM_SWITCH = 32;
+    constexpr uint8_t LIGHT_SENSOR = 34;
 } // namespace Pins
 
 namespace Motion
