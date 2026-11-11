@@ -27,64 +27,113 @@
 		{
 			"type": "wokwi-ds1307",
 			"id": "rtc",
-			"top": 430,
-			"left": -190,
+			"top": -120,
+			"left": 450,
 			"attrs": { "initTime": "now" }
 		},
 		{
 			"type": "wokwi-photoresistor-sensor",
 			"id": "lightSensor",
-			"top": 430,
-			"left": 30,
+			"top": 20,
+			"left": -360,
 			"attrs": { "lux": "10" }
 		},
 		{
 			"type": "wokwi-slide-switch",
 			"id": "armSwitch",
-			"top": 450,
-			"left": 300,
+			"top": 160,
+			"left": -230,
 			"attrs": {}
 		},
 		{
 			"type": "wokwi-resistor",
 			"id": "lampResistor",
-			"top": 450,
-			"left": 470,
-			"rotate": 90,
+			"top": 320,
+			"left": 200,
 			"attrs": { "value": "220" }
 		},
 		{
 			"type": "wokwi-led",
 			"id": "lampLed",
-			"top": 430,
-			"left": 590,
-			"attrs": { "color": "white", "label": "Lamp (simulated)" }
+			"top": 300,
+			"left": 340,
+			"attrs": { "color": "white", "label": "pretend this is the lamp" }
 		}
 	],
 	"connections": [
-		["esp:18", "panServo:PWM", "green", []],
-		["esp:5V", "panServo:V+", "red", []],
-		["esp:GND.1", "panServo:GND", "black", []],
+		["esp:18", "panServo:PWM", "green", ["h139.24", "v-16.6", "h210"]],
+		[
+			"esp:5V",
+			"panServo:V+",
+			"red",
+			["h-59.61", "v198.4", "h455", "v-320.5", "h50"]
+		],
+		[
+			"esp:GND.1",
+			"panServo:GND",
+			"black",
+			["h-84.61", "v266.4", "h460", "v-350", "h70"]
+		],
 
-		["esp:19", "tiltServo:PWM", "green", []],
-		["esp:5V", "tiltServo:V+", "red", []],
-		["esp:GND.1", "tiltServo:GND", "black", []],
+		["esp:19", "tiltServo:PWM", "green", ["h119.24", "v153", "h230"]],
+		[
+			"esp:5V",
+			"tiltServo:V+",
+			"red",
+			["h-59.61", "v198.4", "h455", "v-160.5", "h50"]
+		],
+		[
+			"esp:GND.1",
+			"tiltServo:GND",
+			"black",
+			["h-84.61", "v266.4", "h460", "v-190", "h70"]
+		],
 
-		["esp:21", "rtc:SDA", "blue", []],
-		["esp:22", "rtc:SCL", "yellow", []],
-		["esp:5V", "rtc:5V", "red", []],
-		["esp:GND.1", "rtc:GND", "black", []],
+		["esp:21", "rtc:SDA", "blue", ["h49.24", "v-162.3", "h309.5"]],
+		["esp:22", "rtc:SCL", "yellow", ["h69.24", "v-124", "h289.5"]],
+		[
+			"esp:5V",
+			"rtc:5V",
+			"red",
+			["h-59.61", "v198.4", "h455", "v-495", "h59.5"]
+		],
+		[
+			"esp:GND.1",
+			"rtc:GND",
+			"black",
+			["h-84.61", "v266.4", "h460", "v-525", "h79.5"]
+		],
 
-		["esp:34", "lightSensor:AO", "purple", []],
-		["esp:3V3", "lightSensor:VCC", "red", []],
-		["esp:GND.1", "lightSensor:GND", "black", []],
+		["esp:34", "lightSensor:AO", "purple", ["h-119.61", "v-1.7", "h-73"]],
+		["esp:3V3", "lightSensor:VCC", "red", ["h-39.61", "v7.2", "h-153"]],
+		[
+			"esp:GND.1",
+			"lightSensor:GND",
+			"black",
+			["h-84.61", "v-107.6", "h-108"]
+		],
 
-		["esp:32", "armSwitch:2", "blue", []],
-		["esp:GND.1", "armSwitch:1", "black", []],
+		[
+			"esp:32",
+			"armSwitch:2",
+			"blue",
+			["h-144.61", "v137.6", "h-74", "v-30"]
+		],
+		[
+			"esp:GND.1",
+			"armSwitch:1",
+			"black",
+			["h-84.61", "v266.4", "h-143.5", "v-226"]
+		],
 
-		["esp:27", "lampResistor:1", "orange", []],
-		["lampResistor:2", "lampLed:A", "orange", []],
-		["lampLed:C", "esp:GND.1", "black", []]
+		["esp:27", "lampResistor:1", "orange", ["h-34.61", "v200.85", "h230"]],
+		["lampResistor:2", "lampLed:A", "orange", ["h106.2", "v16.35"]],
+		[
+			"lampLed:C",
+			"esp:GND.1",
+			"black",
+			["v78", "h-435", "v-266.4", "h84.61"]
+		]
 	],
 	"dependencies": {}
 }
