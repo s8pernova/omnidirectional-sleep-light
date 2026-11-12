@@ -4,6 +4,7 @@
 
 namespace Pins
 {
+    // Centralized pin assignments make hardware changes easier to track.
     constexpr uint8_t PAN_SERVO = 18;
     constexpr uint8_t TILT_SERVO = 19;
     constexpr uint8_t LAMP = 27;
@@ -13,6 +14,7 @@ namespace Pins
 
 namespace Motion
 {
+    // Servo angles are expressed in degrees.
     constexpr uint8_t HOME_PAN = 90;
     constexpr uint8_t HOME_TILT = 90;
     constexpr uint8_t WAKE_PAN = 45;
@@ -28,6 +30,7 @@ RTC_DS1307 rtc;
 
 enum class State : uint8_t
 {
+    // Wake sequence: READY -> POSITIONING -> FADING -> ACTIVE.
     DISARMED,
     READY,
     POSITIONING,
@@ -66,6 +69,7 @@ const __FlashStringHelper *stateName(State value)
 
 void setState(State next)
 {
+    // Log transitions once instead of repeatedly printing the current state.
     if (state == next)
     {
         return;
@@ -84,6 +88,7 @@ bool isArmed()
 
 void setLamp(uint8_t brightness)
 {
+    // analogWrite maps 0-255 to the lamp's PWM duty cycle.
     lampBrightness = brightness;
     analogWrite(Pins::LAMP, lampBrightness);
 }
@@ -103,6 +108,7 @@ void stopWakeSequence()
 
 void startWakeSequence()
 {
+    // Both the physical arm switch and a healthy startup state are required.
     if (!isArmed())
     {
         Serial.println(F("[Wake] Ignored: switch is disarmed."));
@@ -122,6 +128,7 @@ void startWakeSequence()
 
 uint8_t moveOneDegreeToward(uint8_t current, uint8_t target)
 {
+    // Small increments keep both servos moving smoothly toward the target.
     if (current < target)
     {
         return current + 1;
@@ -135,6 +142,7 @@ uint8_t moveOneDegreeToward(uint8_t current, uint8_t target)
 
 void updatePositioning()
 {
+    // Use millis() instead of delay() so serial input remains responsive.
     const unsigned long now = millis();
     if (now - lastMotionStepAt < Motion::STEP_INTERVAL_MS)
     {
@@ -149,6 +157,7 @@ void updatePositioning()
 
     if (currentPan == Motion::WAKE_PAN && currentTilt == Motion::WAKE_TILT)
     {
+        // Start timing the fade only after both axes reach the wake position.
         fadeStartedAt = now;
         setState(State::FADING);
     }
@@ -164,6 +173,7 @@ void updateFade()
         return;
     }
 
+    // Linearly scale elapsed time to the full 8-bit brightness range.
     setLamp(static_cast<uint8_t>((elapsed * 255UL) / FADE_DURATION_MS));
 }
 
@@ -216,6 +226,7 @@ void printHelp()
 
 void handleSerial()
 {
+    // Drain every pending character so commands do not accumulate in the buffer.
     while (Serial.available() > 0)
     {
         const char command = static_cast<char>(Serial.read());
@@ -289,6 +300,7 @@ void loop()
 {
     handleSerial();
 
+    // The physical switch always takes priority over an in-progress sequence.
     if (state != State::FAULT)
     {
         if (!isArmed() && state != State::DISARMED)
@@ -301,6 +313,7 @@ void loop()
         }
     }
 
+    // Advance time-dependent states without blocking the main loop.
     if (state == State::POSITIONING)
     {
         updatePositioning();
