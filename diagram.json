@@ -20,7 +20,9 @@
 			"id": "cameraNote",
 			"top": -60,
 			"left": -45,
-			"attrs": { "text": "XIAO ESP32-S3 Sense\nCamera not simulated" }
+			"attrs": {
+				"text": "U1 XIAO ESP32-S3 Sense\nCamera input not simulated"
+			}
 		},
 		{
 			"type": "wokwi-servo",
@@ -30,11 +32,25 @@
 			"attrs": { "horn": "double", "hornColor": "#ff8fab" }
 		},
 		{
+			"type": "wokwi-text",
+			"id": "panServoLabel",
+			"top": 105,
+			"left": 470,
+			"attrs": { "text": "M1 Pan servo" }
+		},
+		{
 			"type": "wokwi-servo",
 			"id": "tiltServo",
 			"top": 180,
 			"left": 450,
 			"attrs": { "horn": "double", "hornColor": "#bde0fe" }
+		},
+		{
+			"type": "wokwi-text",
+			"id": "tiltServoLabel",
+			"top": 265,
+			"left": 470,
+			"attrs": { "text": "M2 Tilt servo" }
 		},
 		{
 			"type": "wokwi-ds1307",
@@ -44,18 +60,25 @@
 			"attrs": { "initTime": "now" }
 		},
 		{
+			"type": "wokwi-text",
+			"id": "rtcLabel",
+			"top": -155,
+			"left": 465,
+			"attrs": { "text": "U2 DS1307 RTC" }
+		},
+		{
 			"type": "wokwi-slide-switch",
 			"id": "armSwitch",
 			"top": 160,
-			"left": -230,
+			"left": -100,
 			"attrs": {}
 		},
 		{
 			"type": "wokwi-text",
 			"id": "armSwitchLabel",
-			"top": 220,
-			"left": -240,
-			"attrs": { "text": "Arm switch" }
+			"top": 210,
+			"left": -150,
+			"attrs": { "text": "SW1 Arm switch" }
 		},
 		{
 			"type": "wokwi-resistor",
@@ -65,78 +88,43 @@
 			"attrs": { "value": "220" }
 		},
 		{
+			"type": "wokwi-text",
+			"id": "lampResistorLabel",
+			"top": 345,
+			"left": 185,
+			"attrs": { "text": "R1 (220 Ω)" }
+		},
+		{
 			"type": "wokwi-led",
 			"id": "lampLed",
 			"top": 300,
 			"left": 340,
-			"attrs": { "color": "white", "label": "pretend this is the lamp" }
+			"attrs": {
+				"color": "white",
+				"label": "LED1 Lamp output (simulated)"
+			}
 		}
 	],
 	"connections": [
 		["esp:D0", "panServo:PWM", "green", []],
-		[
-			"esp:5V",
-			"panServo:V+",
-			"red",
-			[]
-		],
-		[
-			"esp:GND",
-			"panServo:GND",
-			"black",
-			[]
-		],
+		["esp:5V", "panServo:V+", "red", []],
+		["esp:GND", "panServo:GND", "black", []],
 
 		["esp:D1", "tiltServo:PWM", "green", []],
-		[
-			"esp:5V",
-			"tiltServo:V+",
-			"red",
-			[]
-		],
-		[
-			"esp:GND",
-			"tiltServo:GND",
-			"black",
-			[]
-		],
+		["esp:5V", "tiltServo:V+", "red", []],
+		["esp:GND", "tiltServo:GND", "black", []],
 
 		["esp:D4", "rtc:SDA", "blue", []],
 		["esp:D5", "rtc:SCL", "yellow", []],
-		[
-			"esp:5V",
-			"rtc:5V",
-			"red",
-			[]
-		],
-		[
-			"esp:GND",
-			"rtc:GND",
-			"black",
-			[]
-		],
+		["esp:5V", "rtc:5V", "red", []],
+		["esp:GND", "rtc:GND", "black", []],
 
-		[
-			"esp:D7",
-			"armSwitch:2",
-			"blue",
-			[]
-		],
-		[
-			"esp:GND",
-			"armSwitch:1",
-			"black",
-			[]
-		],
+		["esp:D7", "armSwitch:2", "blue", []],
+		["esp:GND", "armSwitch:1", "black", []],
 
 		["esp:D3", "lampResistor:1", "orange", []],
 		["lampResistor:2", "lampLed:A", "orange", ["h106.2", "v16.35"]],
-		[
-			"lampLed:C",
-			"esp:GND",
-			"black",
-			[]
-		]
+		["lampLed:C", "esp:GND", "black", []]
 	],
 	"dependencies": {}
 }
