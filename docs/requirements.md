@@ -26,12 +26,13 @@
 | Servo commands shall remain inside calibrated mechanical limits.                                                                 |
 | A clock, configuration, or command fault shall leave the lamp off and motion inhibited.                                          |
 | The firmware shall expose diagnostics and manual hardware tests over 9600-baud serial.                                           |
+| The device shall detect and track faces using its onboard camera without a laptop or other external processing host.             |
 
 ## Hardware requirements
 
 | Requirement                                                                                                                            |
 | -------------------------------------------------------------------------------------------------------------------------------------- |
-| The controller shall be compatible with the ESP32 Dev Module target configured in PlatformIO.                                          |
+| The controller shall be a Seeed Studio XIAO ESP32-S3 Sense configured as `seeed_xiao_esp32s3` in PlatformIO.                           |
 | Two positional servos shall provide independent pan and tilt control. Continuous-rotation servos shall not be used.                    |
 | The selected tilt servo shall have rated stall torque at least three times the maximum static load moment of the moving lamp assembly. |
 | The servos shall use a regulated external supply sized for both motors' simultaneous peak current.                                     |
@@ -67,5 +68,5 @@ The prototype is ready for integrated testing when all of the following pass:
 4. Final power adapter, servo regulator, protection, connectors, and logic-level lamp switch.
 5. Exact RTC breakout design, including its I2C pull-up voltage and any required level shifter.
 6. Final alarm-setting interface for users who will not have a development computer.
-7. Whether webcam tracking is in scope and, if so, which host computer will process it.
+7. Face-selection, target-loss, and reacquisition behavior when zero, one, or multiple faces are visible.
 8. Final pan/tilt limits and the required target-to-roommate light-level ratio.

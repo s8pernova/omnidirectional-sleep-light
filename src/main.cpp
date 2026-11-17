@@ -1,13 +1,17 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
 #include <RTClib.h>
+#include <Wire.h>
 
 namespace Pins
 {
-    constexpr uint8_t PAN_SERVO = 18;
-    constexpr uint8_t TILT_SERVO = 19;
-    constexpr uint8_t LAMP = 27;
-    constexpr uint8_t ARM_SWITCH = 32;
+    // XIAO ESP32-S3 exposed pins; these names match diagram.json.
+    constexpr uint8_t PAN_SERVO = D0;
+    constexpr uint8_t TILT_SERVO = D1;
+    constexpr uint8_t LAMP = D3;
+    constexpr uint8_t RTC_SDA = D4;
+    constexpr uint8_t RTC_SCL = D5;
+    constexpr uint8_t ARM_SWITCH = D7;
 } // namespace Pins
 
 namespace Motion
@@ -260,6 +264,9 @@ void handleSerial()
 void setup()
 {
     Serial.begin(9600);
+
+    // Select the XIAO's exposed I2C pins explicitly
+    Wire.begin(Pins::RTC_SDA, Pins::RTC_SCL);
 
     pinMode(Pins::ARM_SWITCH, INPUT_PULLUP);
     pinMode(Pins::LAMP, OUTPUT);
