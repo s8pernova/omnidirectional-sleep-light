@@ -25,6 +25,7 @@ namespace Motion
 } // namespace Motion
 
 constexpr unsigned long FADE_DURATION_MS = 5000;
+constexpr unsigned long ARM_SWITCH_DEBOUNCE_MS = 30;
 
 Servo panServo;
 Servo tiltServo;
@@ -47,6 +48,9 @@ uint8_t currentTilt = Motion::HOME_TILT;
 uint8_t lampBrightness = 0;
 unsigned long lastMotionStepAt = 0;
 unsigned long fadeStartedAt = 0;
+bool rawArmSwitchState = false;
+bool debouncedArmSwitchState = false;
+unsigned long armSwitchChangedAt = 0;
 
 const __FlashStringHelper *stateName(State value)
 {
@@ -84,8 +88,42 @@ void setState(State next)
 
 bool isArmed()
 {
-    // INPUT_PULLUP makes the grounded switch position read LOW
+    return debouncedArmSwitchState;
+}
+
+bool readArmSwitch()
+{
+    // INPUT_PULLUP makes the grounded switch position read LOW.
     return digitalRead(Pins::ARM_SWITCH) == LOW;
+}
+
+void initializeArmSwitch()
+{
+    pinMode(Pins::ARM_SWITCH, INPUT_PULLUP);
+    rawArmSwitchState = readArmSwitch();
+    debouncedArmSwitchState = rawArmSwitchState;
+    armSwitchChangedAt = millis();
+}
+
+void updateArmSwitch()
+{
+    const bool currentReading = readArmSwitch();
+    const unsigned long now = millis();
+
+    if (currentReading != rawArmSwitchState)
+    {
+        rawArmSwitchState = currentReading;
+        armSwitchChangedAt = now;
+        return;
+    }
+
+    // Accept the new position only after it remains stable long enough for
+    // mechanical contact bounce to finish.
+    if (currentReading != debouncedArmSwitchState &&
+        now - armSwitchChangedAt >= ARM_SWITCH_DEBOUNCE_MS)
+    {
+        debouncedArmSwitchState = currentReading;
+    }
 }
 
 void setLamp(uint8_t brightness)
@@ -268,7 +306,7 @@ void setup()
     // Select the XIAO's exposed I2C pins explicitly
     Wire.begin(Pins::RTC_SDA, Pins::RTC_SCL);
 
-    pinMode(Pins::ARM_SWITCH, INPUT_PULLUP);
+    initializeArmSwitch();
     pinMode(Pins::LAMP, OUTPUT);
     setLamp(0);
 
@@ -301,6 +339,7 @@ void setup()
 
 void loop()
 {
+    updateArmSwitch();
     handleSerial();
 
     // The physical switch always takes priority over an in-progress sequence
