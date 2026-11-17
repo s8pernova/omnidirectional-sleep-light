@@ -23,5 +23,5 @@ For the reproducible command-line workflow used in CI, install [uv](https://docs
 
 ```bash
 uv sync --locked
-uv run --locked pio run -e esp32dev
+uv run --locked pio run -e xiao_esp32s3
 ```
