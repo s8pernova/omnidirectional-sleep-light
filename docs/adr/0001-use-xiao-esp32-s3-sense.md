@@ -1,8 +1,8 @@
-# ADR 0001: Add XIAO ESP32-S3 Sense for face tracking
+# ADR 0001: Replace the ESP32 DevKit with XIAO ESP32-S3 Sense
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 
@@ -10,18 +10,19 @@ Proposed
 
 ## Context
 
-Face tracking must run on the sleep light **without a laptop, Raspberry Pi, or other dumb extension.** The current ESP32 DevKit must remain the main controller, but it can't process video from the USB webcam while also controlling the rest of the device.
+Face tracking must run on the sleep light **without a laptop, Raspberry Pi, or other dumb extension.** The current ESP32 DevKit cannot practically process video from the USB webcam while controlling the rest of the device.
 
 ## Decision
 
-Keep the current ESP32 DevKit and add a Seeed Studio XIAO ESP32-S3 Sense as a vision coprocessor. Replace the USB webcam with the XIAO Sense camera module.
+Replace the ESP32 DevKit and USB webcam with one Seeed Studio XIAO ESP32-S3 Sense and its camera module.
 
-- The XIAO performs face detection using its camera and PSRAM
-- The XIAO sends face position and tracking status to the ESP32 DevKit over 3.3 V UART
-- The ESP32 DevKit remains responsible for the servos, lamp, RTC, alarm state, and safety limits
+- Perform face detection directly on the XIAO using its camera and PSRAM
+- Use the XIAO as the only controller for the servos, lamp, RTC, alarm state, and safety limits
+- Keep peripheral wiring on exposed 3.3 V GPIOs that are not reserved by the camera
 
 ## Consequences
 
-- The project requires separate firmware targets for the ESP32 DevKit and XIAO
-- The boards require crossed UART transmit and receive connections plus a common ground
-- Wokwi can simulate the boards and UART messages, but not the camera input
+- The project has one controller and one firmware target
+- The PlatformIO target, GPIO assignments, documentation, and Wokwi diagram must change
+- Wokwi can simulate the XIAO and its external peripherals, but not the camera input
+- Face tracking must be verified on physical hardware
