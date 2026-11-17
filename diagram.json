@@ -18,10 +18,10 @@
 		{
 			"type": "wokwi-text",
 			"id": "cameraNote",
-			"top": -60,
-			"left": -45,
+			"top": -40,
+			"left": -40,
 			"attrs": {
-				"text": "U1 XIAO ESP32-S3 Sense\nCamera input not simulated"
+				"text": "XIAO ESP32-S3 Sense"
 			}
 		},
 		{
@@ -35,8 +35,8 @@
 			"type": "wokwi-text",
 			"id": "panServoLabel",
 			"top": 105,
-			"left": 470,
-			"attrs": { "text": "M1 Pan servo" }
+			"left": 430,
+			"attrs": { "text": "Pan servo" }
 		},
 		{
 			"type": "wokwi-servo",
@@ -49,8 +49,8 @@
 			"type": "wokwi-text",
 			"id": "tiltServoLabel",
 			"top": 265,
-			"left": 470,
-			"attrs": { "text": "M2 Tilt servo" }
+			"left": 430,
+			"attrs": { "text": "Tilt servo" }
 		},
 		{
 			"type": "wokwi-ds1307",
@@ -63,8 +63,8 @@
 			"type": "wokwi-text",
 			"id": "rtcLabel",
 			"top": -155,
-			"left": 465,
-			"attrs": { "text": "U2 DS1307 RTC" }
+			"left": 455,
+			"attrs": { "text": "DS1307 RTC" }
 		},
 		{
 			"type": "wokwi-slide-switch",
@@ -77,8 +77,8 @@
 			"type": "wokwi-text",
 			"id": "armSwitchLabel",
 			"top": 210,
-			"left": -150,
-			"attrs": { "text": "SW1 Arm switch" }
+			"left": -130,
+			"attrs": { "text": "Arm switch" }
 		},
 		{
 			"type": "wokwi-resistor",
@@ -91,8 +91,8 @@
 			"type": "wokwi-text",
 			"id": "lampResistorLabel",
 			"top": 345,
-			"left": 185,
-			"attrs": { "text": "R1 (220 Ω)" }
+			"left": 175,
+			"attrs": { "text": "220 Ω Resistor" }
 		},
 		{
 			"type": "wokwi-led",
