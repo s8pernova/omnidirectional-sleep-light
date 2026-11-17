@@ -41,15 +41,6 @@
 			}
 		},
 		{
-			"type": "wokwi-text",
-			"id": "cameraRibbonLabel",
-			"top": -5,
-			"left": 120,
-			"attrs": {
-				"text": "FPC / B2B ribbon"
-			}
-		},
-		{
 			"type": "wokwi-servo",
 			"id": "panServo",
 			"top": 20,
