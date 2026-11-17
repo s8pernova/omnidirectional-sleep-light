@@ -19,7 +19,7 @@ A quiet, directional wake light for people who share a room. At a scheduled time
 - Run `make build` from the terminal. Use `make help` for all the Makefile commands.
 - Enjoy! :)
 
-For the reproducible command-line workflow used in CI, install [uv](https://docs.astral.sh/uv/getting-started/installation/) (CI uses uv 0.10.12), then run:
+For the workflow used in CI, install [uv](https://docs.astral.sh/uv/getting-started/installation/), then run:
 
 ```bash
 uv sync --locked
