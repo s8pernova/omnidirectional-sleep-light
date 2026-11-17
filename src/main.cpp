@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <ESP32Servo.h>
 #include <RTClib.h>
 #include <Wire.h>
 
@@ -24,11 +23,24 @@ namespace Motion
     constexpr unsigned long STEP_INTERVAL_MS = 20;
 } // namespace Motion
 
+namespace Pwm
+{
+    constexpr uint32_t SERVO_FREQUENCY_HZ = 50;
+    constexpr uint8_t SERVO_RESOLUTION_BITS = 14;
+    constexpr uint32_t SERVO_PERIOD_US = 1000000UL / SERVO_FREQUENCY_HZ;
+    constexpr uint16_t SERVO_MIN_PULSE_US = 544;
+    constexpr uint16_t SERVO_MAX_PULSE_US = 2400;
+    constexpr uint8_t PAN_SERVO_CHANNEL = 0;
+    constexpr uint8_t TILT_SERVO_CHANNEL = 1;
+
+    constexpr uint32_t LAMP_FREQUENCY_HZ = 5000;
+    constexpr uint8_t LAMP_RESOLUTION_BITS = 8;
+    constexpr uint8_t LAMP_CHANNEL = 2;
+} // namespace Pwm
+
 constexpr unsigned long FADE_DURATION_MS = 5000;
 constexpr unsigned long ARM_SWITCH_DEBOUNCE_MS = 30;
 
-Servo panServo;
-Servo tiltServo;
 RTC_DS1307 rtc;
 
 enum class State : uint8_t
@@ -128,21 +140,80 @@ void updateArmSwitch()
 
 void setLamp(uint8_t brightness)
 {
-    // analogWrite maps 0-255 to the lamp's PWM duty cycle
     lampBrightness = brightness;
-    analogWrite(Pins::LAMP, lampBrightness);
+    ledcWrite(Pins::LAMP, lampBrightness);
+}
+
+uint32_t servoDutyForAngle(uint8_t angle)
+{
+    const uint32_t pulseWidthUs = map(
+        angle,
+        0,
+        180,
+        Pwm::SERVO_MIN_PULSE_US,
+        Pwm::SERVO_MAX_PULSE_US);
+    const uint32_t maximumDuty = (1UL << Pwm::SERVO_RESOLUTION_BITS) - 1;
+
+    return (pulseWidthUs * maximumDuty) / Pwm::SERVO_PERIOD_US;
+}
+
+void writeServo(uint8_t pin, uint8_t angle)
+{
+    ledcWrite(pin, servoDutyForAngle(angle));
+}
+
+bool initializePwmOutputs()
+{
+    // Channels 0 and 1 share the same 50 Hz servo timer. The lamp uses a
+    // separate channel/timer so its 5 kHz PWM cannot disturb either servo.
+    const bool panAttached = ledcAttachChannel(
+        Pins::PAN_SERVO,
+        Pwm::SERVO_FREQUENCY_HZ,
+        Pwm::SERVO_RESOLUTION_BITS,
+        Pwm::PAN_SERVO_CHANNEL);
+    const bool tiltAttached = ledcAttachChannel(
+        Pins::TILT_SERVO,
+        Pwm::SERVO_FREQUENCY_HZ,
+        Pwm::SERVO_RESOLUTION_BITS,
+        Pwm::TILT_SERVO_CHANNEL);
+    const bool lampAttached = ledcAttachChannel(
+        Pins::LAMP,
+        Pwm::LAMP_FREQUENCY_HZ,
+        Pwm::LAMP_RESOLUTION_BITS,
+        Pwm::LAMP_CHANNEL);
+
+    if (!panAttached || !tiltAttached || !lampAttached)
+    {
+        if (panAttached)
+        {
+            ledcDetach(Pins::PAN_SERVO);
+        }
+        if (tiltAttached)
+        {
+            ledcDetach(Pins::TILT_SERVO);
+        }
+        if (lampAttached)
+        {
+            ledcDetach(Pins::LAMP);
+        }
+        return false;
+    }
+
+    writeServo(Pins::PAN_SERVO, currentPan);
+    writeServo(Pins::TILT_SERVO, currentTilt);
+    setLamp(0);
+    return true;
 }
 
 void stopWakeSequence()
 {
-    setLamp(0);
-
     // A hardware fault is latched until the board is reset and startup passes
     if (state == State::FAULT)
     {
         return;
     }
 
+    setLamp(0);
     setState(isArmed() ? State::READY : State::DISARMED);
 }
 
@@ -192,8 +263,8 @@ void updatePositioning()
 
     currentPan = moveOneDegreeToward(currentPan, Motion::WAKE_PAN);
     currentTilt = moveOneDegreeToward(currentTilt, Motion::WAKE_TILT);
-    panServo.write(currentPan);
-    tiltServo.write(currentTilt);
+    writeServo(Pins::PAN_SERVO, currentPan);
+    writeServo(Pins::TILT_SERVO, currentTilt);
 
     if (currentPan == Motion::WAKE_PAN && currentTilt == Motion::WAKE_TILT)
     {
@@ -308,7 +379,8 @@ void setup()
 
     initializeArmSwitch();
     pinMode(Pins::LAMP, OUTPUT);
-    setLamp(0);
+    digitalWrite(Pins::LAMP, LOW);
+    lampBrightness = 0;
 
     Serial.println(F("\nOmnidirectional Sleep Light"));
 
@@ -322,14 +394,13 @@ void setup()
         Serial.println(F("[Fault] DS1307 clock is not running."));
         setState(State::FAULT);
     }
+    else if (!initializePwmOutputs())
+    {
+        Serial.println(F("[Fault] PWM outputs could not be initialized."));
+        setState(State::FAULT);
+    }
     else
     {
-        // Do not energize either motor until all required startup checks pass
-        panServo.attach(Pins::PAN_SERVO);
-        tiltServo.attach(Pins::TILT_SERVO);
-        panServo.write(currentPan);
-        tiltServo.write(currentTilt);
-
         setState(isArmed() ? State::READY : State::DISARMED);
     }
 
