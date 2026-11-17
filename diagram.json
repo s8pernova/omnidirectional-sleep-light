@@ -32,18 +32,11 @@
 			"attrs": { "initTime": "now" }
 		},
 		{
-			"type": "wokwi-photoresistor-sensor",
-			"id": "lightSensor",
-			"top": 20,
-			"left": -360,
-			"attrs": { "lux": "10" }
-		},
-		{
 			"type": "wokwi-slide-switch",
 			"id": "armSwitch",
 			"top": 160,
 			"left": -230,
-			"attrs": {}
+			"attrs": { "color": "white", "label": "Arm Switch" }
 		},
 		{
 			"type": "wokwi-resistor",
@@ -102,15 +95,6 @@
 			"rtc:GND",
 			"black",
 			["h-84.61", "v266.4", "h460", "v-525", "h79.5"]
-		],
-
-		["esp:34", "lightSensor:AO", "purple", ["h-119.61", "v-1.7", "h-73"]],
-		["esp:3V3", "lightSensor:VCC", "red", ["h-39.61", "v7.2", "h-153"]],
-		[
-			"esp:GND.1",
-			"lightSensor:GND",
-			"black",
-			["h-84.61", "v-107.6", "h-108"]
 		],
 
 		[

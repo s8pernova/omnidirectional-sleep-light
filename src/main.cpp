@@ -8,7 +8,6 @@ namespace Pins
     constexpr uint8_t TILT_SERVO = 19;
     constexpr uint8_t LAMP = 27;
     constexpr uint8_t ARM_SWITCH = 32;
-    constexpr uint8_t LIGHT_SENSOR = 34;
 } // namespace Pins
 
 namespace Motion
@@ -197,8 +196,6 @@ void printStatus()
     Serial.print(currentTilt);
     Serial.print(F(" lamp="));
     Serial.print(lampBrightness);
-    Serial.print(F(" lightSensor="));
-    Serial.print(analogRead(Pins::LIGHT_SENSOR));
 
     if (state != State::FAULT)
     {

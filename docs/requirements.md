@@ -36,7 +36,7 @@
 | The selected tilt servo shall have rated stall torque at least three times the maximum static load moment of the moving lamp assembly. |
 | The servos shall use a regulated external supply sized for both motors' simultaneous peak current.                                     |
 | The lamp shall use an external supply and a logic-level switching device rated for the lamp's voltage and current.                     |
-| The ESP32, servos, sensors, RTC, and lamp-control circuit shall share a common low-voltage ground.                                     |
+| The ESP32, servos, RTC, switches, and lamp-control circuit shall share a common low-voltage ground.                                    |
 | Every signal connected to an ESP32 GPIO shall remain within 3.3 V logic limits.                                                        |
 | A 5 V DS1307 module shall use a verified 3.3 V-safe I2C interface or a bidirectional level shifter.                                    |
 | The support, joints, and wiring shall tolerate full permitted motion without slipping, collision, pinching, or wire strain.            |

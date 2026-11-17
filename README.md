@@ -10,8 +10,7 @@ A quiet, directional wake light for people who share a room. At a scheduled time
 1. A DS1307 real time clock (RTC) keeps track of the time.
 2. At the configured alarm time, an ESP32 moves the lamp to stored pan and tilt angles.
 3. The ESP32 gradually increases the lamp brightness through a MOSFET power switch.
-4. A photoresistor measures ambient or lamp output for diagnostics.
-5. A physical switch arms or disarms the alarm.
+4. A physical switch arms or disarms the alarm.
 
 ### First Setup
 
