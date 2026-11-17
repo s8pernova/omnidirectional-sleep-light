@@ -25,6 +25,31 @@
 			}
 		},
 		{
+			"type": "wokwi-pir-motion-sensor",
+			"id": "cameraPlaceholder",
+			"top": -250,
+			"left": 160,
+			"attrs": {}
+		},
+		{
+			"type": "wokwi-text",
+			"id": "cameraPlaceholderLabel",
+			"top": -285,
+			"left": 110,
+			"attrs": {
+				"text": "Sense camera (placeholder)"
+			}
+		},
+		{
+			"type": "wokwi-text",
+			"id": "cameraRibbonLabel",
+			"top": -5,
+			"left": 120,
+			"attrs": {
+				"text": "FPC / B2B ribbon"
+			}
+		},
+		{
 			"type": "wokwi-servo",
 			"id": "panServo",
 			"top": 20,
@@ -78,7 +103,7 @@
 			"id": "armSwitchLabel",
 			"top": 210,
 			"left": -130,
-			"attrs": { "text": "Arm switch" }
+			"attrs": { "text": "Alarm switch" }
 		},
 		{
 			"type": "wokwi-resistor",
@@ -99,30 +124,42 @@
 			"id": "lampLed",
 			"top": 300,
 			"left": 340,
-			"attrs": {
-				"color": "white",
-				"label": "LED1 Lamp output (simulated)"
-			}
+			"attrs": { "color": "white" }
+		},
+		{
+			"type": "wokwi-text",
+			"id": "lampLedLabel",
+			"top": 350,
+			"left": 325,
+			"attrs": { "text": "Lamp output (placeholder)" }
 		}
 	],
 	"connections": [
+		[
+			"cameraPlaceholder:VCC",
+			"esp:5V",
+			"gray",
+			["v25", "h-90", "*", "h20"]
+		],
+		[
+			"cameraPlaceholder:GND",
+			"esp:GND",
+			"silver",
+			["v40", "h-105", "*", "h35"]
+		],
+
 		[
 			"esp:D0",
 			"panServo:PWM",
 			"green",
 			["h-30", "v105", "h390", "*", "h-20"]
 		],
-		[
-			"esp:5V",
-			"panServo:V+",
-			"red",
-			["h120", "v40", "h220", "*", "h-20"]
-		],
+		["esp:5V", "panServo:V+", "red", ["h100", "v40", "h240", "*", "h-20"]],
 		[
 			"esp:GND",
 			"panServo:GND",
 			"black",
-			["h135", "v60", "h205", "*", "h-20"]
+			["h120", "v60", "h220", "*", "h-20"]
 		],
 
 		[
@@ -135,39 +172,19 @@
 			"esp:5V",
 			"tiltServo:V+",
 			"red",
-			["h150", "v200", "h190", "*", "h-20"]
+			["h100", "v200", "h240", "*", "h-20"]
 		],
 		[
 			"esp:GND",
 			"tiltServo:GND",
 			"black",
-			["h165", "v220", "h175", "*", "h-20"]
+			["h120", "v220", "h220", "*", "h-20"]
 		],
 
-		[
-			"esp:D4",
-			"rtc:SDA",
-			"blue",
-			["h-40", "v-105", "h390", "*", "h-20"]
-		],
-		[
-			"esp:D5",
-			"rtc:SCL",
-			"yellow",
-			["h-55", "v-85", "h405", "*", "h-20"]
-		],
-		[
-			"esp:5V",
-			"rtc:5V",
-			"red",
-			["h80", "v-125", "h260", "*", "h-20"]
-		],
-		[
-			"esp:GND",
-			"rtc:GND",
-			"black",
-			["h95", "v-105", "h245", "*", "h-20"]
-		],
+		["esp:D4", "rtc:SDA", "blue", ["h-40", "v-105", "h390", "*", "h-20"]],
+		["esp:D5", "rtc:SCL", "yellow", ["h-55", "v-85", "h405", "*", "h-20"]],
+		["esp:5V", "rtc:5V", "red", ["h100", "v-125", "h240", "*", "h-20"]],
+		["esp:GND", "rtc:GND", "black", ["h120", "v-105", "h220", "*", "h-20"]],
 
 		[
 			"esp:D7",
@@ -177,24 +194,14 @@
 		],
 		[
 			"esp:GND",
-			"armSwitch:1",
+			"armSwitch:3",
 			"black",
 			["h20", "v110", "h-170", "*", "h20"]
 		],
 
-		[
-			"esp:D3",
-			"lampResistor:1",
-			"orange",
-			["h-60", "v270", "h250", "*", "h-20"]
-		],
-		["lampResistor:2", "lampLed:A", "orange", ["h106.2", "v16.35"]],
-		[
-			"lampLed:C",
-			"esp:GND",
-			"black",
-			["v80", "h-250", "*", "h20"]
-		]
+		["esp:D3", "lampResistor:1", "orange", ["h-60", "v270"]],
+		["lampResistor:2", "lampLed:A", "orange", ["h50", "*", "v40"]],
+		["lampLed:C", "esp:GND", "black", ["v80", "h-250", "*", "h20"]]
 	],
 	"dependencies": {}
 }
