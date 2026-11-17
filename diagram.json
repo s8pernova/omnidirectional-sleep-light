@@ -4,11 +4,23 @@
 	"editor": "wokwi",
 	"parts": [
 		{
-			"type": "board-esp32-devkit-c-v4",
+			"type": "board-xiao-esp32-s3",
 			"id": "esp",
 			"top": 0,
 			"left": 0,
-			"attrs": {}
+			"attrs": {
+				"flashSize": "8",
+				"psramSize": "8",
+				"psramType": "octal",
+				"serialInterface": "USB_SERIAL_JTAG"
+			}
+		},
+		{
+			"type": "wokwi-text",
+			"id": "cameraNote",
+			"top": -60,
+			"left": -45,
+			"attrs": { "text": "XIAO ESP32-S3 Sense\nCamera not simulated" }
 		},
 		{
 			"type": "wokwi-servo",
@@ -36,7 +48,14 @@
 			"id": "armSwitch",
 			"top": 160,
 			"left": -230,
-			"attrs": { "color": "white", "label": "Arm Switch" }
+			"attrs": {}
+		},
+		{
+			"type": "wokwi-text",
+			"id": "armSwitchLabel",
+			"top": 220,
+			"left": -240,
+			"attrs": { "text": "Arm switch" }
 		},
 		{
 			"type": "wokwi-resistor",
@@ -54,69 +73,69 @@
 		}
 	],
 	"connections": [
-		["esp:18", "panServo:PWM", "green", ["h139.24", "v-16.6", "h210"]],
+		["esp:D0", "panServo:PWM", "green", []],
 		[
 			"esp:5V",
 			"panServo:V+",
 			"red",
-			["h-59.61", "v198.4", "h455", "v-320.5", "h50"]
+			[]
 		],
 		[
-			"esp:GND.1",
+			"esp:GND",
 			"panServo:GND",
 			"black",
-			["h-84.61", "v266.4", "h460", "v-350", "h70"]
+			[]
 		],
 
-		["esp:19", "tiltServo:PWM", "green", ["h119.24", "v153", "h230"]],
+		["esp:D1", "tiltServo:PWM", "green", []],
 		[
 			"esp:5V",
 			"tiltServo:V+",
 			"red",
-			["h-59.61", "v198.4", "h455", "v-160.5", "h50"]
+			[]
 		],
 		[
-			"esp:GND.1",
+			"esp:GND",
 			"tiltServo:GND",
 			"black",
-			["h-84.61", "v266.4", "h460", "v-190", "h70"]
+			[]
 		],
 
-		["esp:21", "rtc:SDA", "blue", ["h49.24", "v-162.3", "h309.5"]],
-		["esp:22", "rtc:SCL", "yellow", ["h69.24", "v-124", "h289.5"]],
+		["esp:D4", "rtc:SDA", "blue", []],
+		["esp:D5", "rtc:SCL", "yellow", []],
 		[
 			"esp:5V",
 			"rtc:5V",
 			"red",
-			["h-59.61", "v198.4", "h455", "v-495", "h59.5"]
+			[]
 		],
 		[
-			"esp:GND.1",
+			"esp:GND",
 			"rtc:GND",
 			"black",
-			["h-84.61", "v266.4", "h460", "v-525", "h79.5"]
+			[]
 		],
 
 		[
-			"esp:32",
+			"esp:D7",
 			"armSwitch:2",
 			"blue",
-			["h-144.61", "v137.6", "h-74", "v-30"]
+			[]
 		],
 		[
-			"esp:GND.1",
+			"esp:GND",
 			"armSwitch:1",
 			"black",
-			["h-84.61", "v266.4", "h-143.5", "v-226"]
+			[]
 		],
 
-		["esp:27", "lampResistor:1", "orange", ["h-34.61", "v200.85", "h230"]],
+		["esp:D3", "lampResistor:1", "orange", []],
 		["lampResistor:2", "lampLed:A", "orange", ["h106.2", "v16.35"]],
 		[
 			"lampLed:C",
-			"esp:GND.1",
+			"esp:GND",
 			"black",
-			["v78", "h-435", "v-266.4", "h84.61"]
+			[]
 		]
 	],
 	"dependencies": {}
