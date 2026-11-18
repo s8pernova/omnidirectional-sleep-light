@@ -2,6 +2,8 @@
 #include <RTClib.h>
 #include <Wire.h>
 
+#include "vision_camera.h"
+
 namespace Pins
 {
     // XIAO ESP32-S3 exposed pins; these names match diagram.json.
@@ -309,6 +311,8 @@ void printStatus()
     Serial.print(currentTilt);
     Serial.print(F(" lamp="));
     Serial.print(lampBrightness);
+    Serial.print(F(" camera="));
+    Serial.print(VisionCamera::isReady() ? F("READY") : F("UNAVAILABLE"));
 
     if (state != State::FAULT)
     {
@@ -329,6 +333,7 @@ void printHelp()
     Serial.println(F("Commands:"));
     Serial.println(F("  t  run a test wake sequence"));
     Serial.println(F("  x  cancel the sequence and turn off the lamp"));
+    Serial.println(F("  c  capture one camera test frame"));
     Serial.println(F("  s  print system status"));
     Serial.println(F("  h  print this help"));
 }
@@ -349,6 +354,10 @@ void handleSerial()
         case 'x':
         case 'X':
             stopWakeSequence();
+            break;
+        case 'c':
+        case 'C':
+            VisionCamera::captureDiagnosticFrame();
             break;
         case 's':
         case 'S':
@@ -383,6 +392,13 @@ void setup()
     lampBrightness = 0;
 
     Serial.println(F("\nOmnidirectional Sleep Light"));
+
+    // Wokwi has no camera model, so failure here is reported without putting
+    // the rest of the simulated system into FAULT.
+    if (VisionCamera::begin())
+    {
+        VisionCamera::captureDiagnosticFrame();
+    }
 
     if (!rtc.begin())
     {
